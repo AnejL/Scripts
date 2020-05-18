@@ -1,7 +1,0 @@
-#!/bin/sh
-template="$HOME/.local/share/c-file-template"
-
-cp "$template" "$PWD/$1.c"
-echo "Copied file $template to $PWD/$1.c\n"
-
-exit 0

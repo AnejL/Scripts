@@ -1,9 +1,1 @@
-[submodule ".local/sysprog/archer"]
-	path = .local/sysprog/archer
-	url = https://github.com/AnejL/archer
-[submodule ".local/sysprog/dbc"]
-	path = .local/sysprog/dbc
-	url = https://github.com/AnejL/dbc
-[submodule ".local/sysprog/komi"]
-	path = .local/sysprog/komi
-	url = https://github.com/AnejL/komi
+

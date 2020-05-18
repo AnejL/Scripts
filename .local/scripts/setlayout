@@ -1,6 +1,0 @@
-#!/bin/sh
-
-lo=$(echo "us\nsi" | dmenu -p "Select keyboard layout: " -i)
-setxkbmap $lo
-
-exit 0

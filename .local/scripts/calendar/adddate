@@ -1,5 +1,0 @@
-#!/bin/bash
-
-# make a dmenu prompt
-echo "$1,$2,$3" >> $HOME/Documents/Scripts/calendar/importantdates
-exit 0

@@ -35,9 +35,3 @@
 /.config/ranger/bookmarks
 /.config/ranger/history
 /.config/Thunar/accels.scm
-
-# Ignore everything in .local folder except
-!/.local/
-/.local/*
-!/.local/scripts
-!/.local/sysprog

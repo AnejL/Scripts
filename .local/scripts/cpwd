@@ -1,4 +1,0 @@
-#!/bin/sh
-[ "$1" = "--help" ] && echo "Usage: cpwd - copies PWD to clipboard" && exit 1
-
-echo $PWD | tr -d '\n' | xclip -i -selection clipboard

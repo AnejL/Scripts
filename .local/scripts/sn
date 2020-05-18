@@ -1,8 +1,0 @@
-#!/bin/sh
-[ "$1" = "--help" ] && echo "help message" && exit 1
-
-[ $# -eq 1 ] && script=$1 || read -p "Enter script name: " script
-
-[ ! -f "$SCRIPTDIR/$script" ] && new "$SCRIPTDIR/$script" && echo "Successfully created script $script" && se $script || "Error occured! Does script with the same name exist alreadly?"
-
-exit 0
