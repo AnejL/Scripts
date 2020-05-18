@@ -1,0 +1,9 @@
+#!/bin/sh
+
+TID=$(xinput list | grep "Synaptics" | awk -F'\t' '{ print $2 }' | tr -d 'id=')
+
+state=$(echo "enable\ndisable" | dmenu -p "Toggle trackpad:")
+
+xinput $state $TID 
+
+exit 0

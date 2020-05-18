@@ -1,0 +1,68 @@
+#!/bin/bash
+
+# semester number
+SEMNU=5
+
+# location of school files
+DIRNAME="$HOME/Documents/Faks/$(echo $SEMNU)_semester"
+
+# list all dirs in this level
+cd $DIRNAME
+COURSES=$(find * -maxdepth 0)
+
+# list all courses and pipe them into dmenu 
+sel=$(echo -e $COURSES | tr " " "\n" | dmenu -i -p "Select subject: " -l $(find * -maxdepth 0 | wc -l))
+
+[ "$sel" = "" ] && exit 1
+
+# change directory to the selected course's dir
+cd $DIRNAME/$sel
+
+headings=0
+preview=1
+
+for arg in "$@"
+do
+	case "$arg" in
+		"h")
+			headings=1
+		;;
+		"n")
+			preview=0
+		;;
+		*)
+		;;
+	esac
+done
+
+# dirty hack because bash doesn't cat new lines properly
+IFS=
+
+# select the markdown file for editing
+file=$DIRNAME/$sel/zapiski_$(echo $sel | tr '[:upper:]' '[:lower:]').markdown
+
+# get chapters and count them - only important ones (#,## but not ### and so on)
+chapters=""
+numchapters=0
+if [ $headings -eq 1 ]; then
+	chapters="$(cat $file | awk '/^\#{1,2}[^#]*$/{print $0,"-",NR}' | tr "#" "        ")"
+	numchapters=$(echo $chapters | wc -l)
+fi
+
+# display compiled notes file in surf
+if [ $preview -eq 1 ] && [ -f "$DIRNAME/$sel/vim-markdown-preview.html" ]; then
+	surf "$DIRNAME/$sel/vim-markdown-preview.html" &
+fi
+
+if [ $headings -eq 1 ] && [ $numchapters -gt 0 ]; then
+	# chapter's beginning line
+	line=$(echo -e $chapters | dmenu -i -p "Select chapter (Esc: go to end): " -l $numchapters)
+
+	# open st with nvim at this line
+	st -e nvim +$(echo $line | awk '{print $(NF)}') $file &
+else
+	sleep 0.5
+	st -e nvim + $file &
+fi
+
+exit 0

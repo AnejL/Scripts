@@ -1,0 +1,8 @@
+#!/bin/sh
+[ "$1" = "--help" ] && echo "help message" && exit 1
+
+[ $# -eq 1 ] && [ -f "$SCRIPTDIR/$1" ] && script="$SCRIPDIR/$1" || script=$(ls $SCRIPTDIR | fzf) || echo "Error occured!"
+
+[ -z "$script" ] || $EDITOR $SCRIPTDIR/$script
+
+exit 0

@@ -1,0 +1,46 @@
+#!/bin/bash
+[ "$1" = "--help" ] && echo "help message" && exit 1
+
+function quit {
+	echo "$1"
+	exit 1
+}
+
+CONFIGFILE="$XDG_CONFIG_HOME/gitman/repos"
+
+# check if configs are valid and create if not
+if [ -d "$XDG_CONFIG_HOME/gitman" ] && [ -f $CONFIGFILE ]
+then
+	echo "Config file valid"
+else
+	mkdir "$XDG_CONFIG_HOME/gitman" && touch $CONFIGFILE && echo "Config file created: $CONFIGFILE" || quit "Error when creating config file"
+fi
+
+REPOS="$(cat $CONFIGFILE)"
+toupdate=""
+
+# use git diff to find if any dirs need updating
+for repo in $(cat $CONFIGFILE); do
+	echo -e "\nChecking: $repo"
+	cd $repo
+	
+	git pull origin master			
+
+	diff=$(git diff origin/master | wc -l)	
+
+	LOCAL="$(git rev-parse @)"
+	REMOTE="$(git rev-parse master)"
+	BASE="$(git merge-base @ master)"
+	wait
+
+	#	echo -e "diff: $diff \n$LOCAL\n$BASE\n"
+
+	[ $diff -eq 0 ] && [ $LOCAL = $REMOTE ] && echo "Up to date!" && continue
+	
+	if [ $diff -gt 0 ] # && [ "$REMOTE" = "$BASE" ]
+	then
+		read -p "Push repo? [y/n] "
+		[ "$REPLY" = "n" ] && continue
+		gc "gitman update"
+	fi
+done 

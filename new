@@ -1,0 +1,9 @@
+#!/bin/sh
+NAME="$1"
+
+touch $NAME
+chmod +x $NAME
+
+echo '#!/bin/sh\n[ "$1" = "--help" ] && echo "help message" && exit 1\n' > $NAME
+
+exit 0

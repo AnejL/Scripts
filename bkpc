@@ -1,0 +1,44 @@
+#!/bin/sh
+#
+# simple backupper for c files
+# 
+# creates a file cfile_backup_1.c from cfile.c 
+# and increments indexes
+#
+
+# help message
+if [ $# -eq 0 ] || [ "$1" = "--help" ] &&  echo "Usage: bkpc [filename]" && exit 1
+
+# no file like that exists
+if [ ! -e "$1" ]; then
+	echo "Supply a valid filename!"
+	exit 1
+fi
+
+# create a directory and cd into it
+if [ ! -d "bkp" ]; then
+	mkdir "bkp"
+fi
+
+# cd bkp
+
+# get name without .c suffix
+filename=$(echo $1 | cut -d "." -f1)
+
+# get last backup file from current directory
+lastbackupfile="$(ls bkp | grep -E "^$(echo $filename)_backup_[0-9][0-9]?[0-9]?\.c$" | tail -1)"
+# if a backup exists then increment index else create a new backup file
+if [ ! "$lastbackupfile" = "" ]; then
+	# increment
+	index=$(($(echo $lastbackupfile | cut -d '.' -f1 | awk -F "_" '{print $(NF)}') +1 ))
+	echo "Created backup with index $index"
+	# copy with output
+	cp --verbose "$1" "bkp/$filename""_backup_""$index.c"
+else
+	# new backup
+	echo "Created new backup!"
+	# copy with output
+	cp --verbose "$1" "bkp/$filename""_backup_0.c"
+fi
+
+exit 0
