@@ -1,0 +1,27 @@
+#!/bin/sh
+descs="reload dbc\ntoggle touchpad\nxampp start\nxampp stop\nrestart networkmanager\n"
+count=5
+echo "$DMENU_WHITE $DMENU_LEFT_TOP"
+selected=$(echo $descs | dmenu -p "Start:" $(echo "$DMENU_WHITE $DMENU_LEFT_TOP") -l $count)
+
+case $selected in
+	"reload dbc")
+		pkill dbc; dbc &
+		;;
+	"toggle touchpad")
+		$SCRIPTDIR/synaptics.sh
+		;;
+	"xampp start")
+		sudo /opt/lampp/xampp start
+		;;
+	"xampp stop")
+		sudo /opt/lampp/xampp "stop"
+		;;
+	"restart networkmanager")
+		sudo systemctl Networkmanager restart
+		;;
+	*)
+		exit 1
+		;;
+esac
+exit 0

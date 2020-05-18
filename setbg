@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# wallpaper config file
+WP=$HOME/.config/wall.png
+
+# copy picture sent as 1st parameter to default location or 
+# set it from that location if no parameters are passed
+[ $# -eq 1 ] && [ -f $1 ] && cp $1 $WP; xwallpaper --zoom $WP 2> /dev/null
+
+exit 0

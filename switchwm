@@ -1,0 +1,16 @@
+#!/bin/sh
+wmf=$HOME/.config/wm
+wm=$(cat $wmf)
+
+if [ "$wm" = "i3" ]; then
+	notify-send "Window manager switched!" "Selected: bspwm"
+	echo "bspwm" > $wmf
+elif [ "$wm" = "bspwm" ]; then
+	notify-send "Window manager switched!" "Selected: dwm"
+	echo "dwm" > $wmf
+else
+	notify-send "Window manager switched!" "Selected: i3"
+	echo "i3" > $wmf
+fi
+
+exit 0

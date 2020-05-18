@@ -1,0 +1,8 @@
+#@Bljižnice grafičnega okolja
+#@@Zapri program
+super + shift + q
+	placeholder
+
+#@@Zaženi programe
+super + p
+	placeholder
