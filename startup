@@ -21,6 +21,9 @@ fi
 if [ $WM = "dwm" ]; then
 	setbg &
 	dbc &
+	firefox https://ucilnica.fri.uni-lj.si/login/index.ph &
+	discord &
 fi
+
 calendar & 
 st &
