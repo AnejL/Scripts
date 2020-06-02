@@ -1,10 +1,10 @@
 #!/bin/bash
 
-commands="~\\\cite{}\n\\\begin{param}...\\\end{param}\n\\\item\n"
+commands="~\\\cite{}\n\\\begin{param}...\\\end{param}\n\\\item\n\\\ref{}\n\\\caption{}\n\\\textit{}\n\\\textbf{}\n"
 options="itemize\nenumerate\nfigure"
 
 # select one of the commands
-cmd=$(echo -ne $commands | dmenu -l 3 -p "Select LaTeX command")
+cmd=$(echo -ne $commands | dmenu -l 7 -p "Select LaTeX command")
 
 # if it supports parameters then select those too
 [[ $cmd =~ \{param\} ]] && opt=$(echo -ne $options | dmenu -p "Select command parameter: " ) && cmd=$(echo $cmd | sed "s/param/$opt/g" | tr "..." "\n\n")
