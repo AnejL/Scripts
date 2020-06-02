@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd $PWD
+cd "$PWD"
 pdffile=$(ls *.pdf | fzf)
 echo "$pdffile" | entr -p pkill -HUP mupdf &
 mupdf "$pdffile" &

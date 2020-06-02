@@ -1,2 +1,2 @@
 #!/bin/bash
-echo -n $(cat /home/anej/Documents/Accounts/creds.txt) | xclip -i -selection clipboard
+echo -n $(cat /home/anej/Documents/Accounts/creds.txt) | toclipboard 

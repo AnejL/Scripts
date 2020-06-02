@@ -12,19 +12,23 @@ OPTLIST="Connect to headset\nDisconnect & stop"
 
 selected="$(echo -e $OPTLIST | dmenu -fn "Monospace-16" -i  -p  "   : " )"
 
+device="D4:6D:6D:38:DC:A8"
+headset="5C:FB:7C:15:2F:46"
+
 echo $selected
 
 if [[ "$selected" == "Connect to headset" ]]; then
+	bluetoothctl default-agent
 	bluetoothctl power on
 	bluetoothctl agent on
-	bluetoothctl connect 5C:FB:7C:15:2F:46
+	bluetoothctl connect $headset
 	#bluetoothctl scan on
 	#wait
 	#sleep 2
 	#bluetoothctl scan off
 	#wait
 else
-	bluetoothctl disconnect 5C:FB:7C:15:2F:46
+	bluetoothctl disconnect $headset 
 	sudo systemctl disable bluetooth.service
 	#wait
 fi
