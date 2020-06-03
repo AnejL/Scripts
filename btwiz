@@ -17,7 +17,7 @@ headset="5C:FB:7C:15:2F:46"
 
 echo $selected
 
-if [[ "$selected" == "Connect to headset" ]]; then
+if [ "$selected" = "Connect to headset" ]; then
 	bluetoothctl default-agent
 	bluetoothctl power on
 	bluetoothctl agent on

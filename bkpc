@@ -7,18 +7,13 @@
 #
 
 # help message
-if [ $# -eq 0 ] || [ "$1" = "--help" ] &&  echo "Usage: bkpc [filename]" && exit 1
+[ $# -eq 0 ] || [ "$1" = "--help" ] &&  echo "Usage: bkpc [filename]" && exit 1
 
 # no file like that exists
-if [ ! -e "$1" ]; then
-	echo "Supply a valid filename!"
-	exit 1
-fi
+[ ! -e "$1" ] && echo "Supply a valid filename!"; exit 1
 
-# create a directory and cd into it
-if [ ! -d "bkp" ]; then
-	mkdir "bkp"
-fi
+# create a backup directory
+[ ! -d "bkp" ] && mkdir "bkp"
 
 # cd bkp
 
