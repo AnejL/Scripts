@@ -1,5 +1,6 @@
 #!/bin/bash
 [ "$1" = "--help" ] && echo "help message" && exit 1
+[ "$1" = "y" ] && override="set"
 
 function quit {
 	echo "$1"
@@ -38,8 +39,11 @@ for repo in $(cat $CONFIGFILE); do
 	
 	if [ $diff -gt 0 ] # && [ "$REMOTE" = "$BASE" ]
 	then
-		read -p "Remote repo behind local. Push? [y/n] "
-		[ "$REPLY" = "n" ] && continue
+		if [ -z $override ]
+		then
+			read -p "Remote repo behind local. Push? [y/n] "
+			[ "$REPLY" = "n" ] && continue
+		fi
 		gc "gitman update"
 	fi
 done 
