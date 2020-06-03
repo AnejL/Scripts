@@ -17,7 +17,6 @@ else
 fi
 
 REPOS="$(cat $CONFIGFILE)"
-toupdate=""
 
 # use git diff to find if any dirs need updating
 for repo in $(cat $CONFIGFILE); do
@@ -39,7 +38,7 @@ for repo in $(cat $CONFIGFILE); do
 	
 	if [ $diff -gt 0 ] # && [ "$REMOTE" = "$BASE" ]
 	then
-		read -p "Push repo? [y/n] "
+		read -p "Remote repo behind local. Push? [y/n] "
 		[ "$REPLY" = "n" ] && continue
 		gc "gitman update"
 	fi

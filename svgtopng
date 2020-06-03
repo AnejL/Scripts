@@ -1,0 +1,17 @@
+#!/bin/bash
+
+inputdir="$HOME/Documents/Faks/diplomska/design/svg"
+outputdir="$HOME/Documents/Faks/diplomska/design/png"
+
+files=$(ls $inputdir)
+for file in $files
+do
+	# skip if filename starts with _
+	[[ $file =~ ^_ ]] && continue
+
+	# remove .svg from filename and append .png
+	pngname="${file%.svg}.png"
+
+	# export as png
+	inkscape "$inputdir/$file" --export-filename "$outputdir/$pngname"
+done
