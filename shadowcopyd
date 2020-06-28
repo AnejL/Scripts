@@ -1,0 +1,22 @@
+#!/bin/bash
+
+CACHEDIR="$HOME/.cache/shadowcopy"
+CACHE="$CACHEDIR/cache"
+
+[ ! -d $CACHEDIR ] && mkdir $CACHEDIR
+[ ! -p $CACHE ] && mkfifo $CACHE
+
+filelist=""
+while read line <$CACHE
+do
+	[ "$line" = "exit" ] && break;
+	
+	cmd=${line%% *}
+	file=${line##* }
+
+	# [ $cmd = "add" ] && filelist="$filelist\n$file" && entr $file
+	# [ $cmd = "rm" ] && filelist="${filelist/$file/}" 
+
+	# echo -e filelist : $filelist
+	echo $file | entr -p backup "$file"
+done

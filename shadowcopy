@@ -1,0 +1,17 @@
+#!/bin/sh
+
+[ $(pgrep shadowcopyd | wc -l) -eq 0 ] && echo "You must run shadowcopy daemon!\nrun: shadowcopyd &\n" && exit 1
+
+echousage() {
+	echo "Usage: \n\tshadowcopy add [file]\n\tshadowcopy rm [file]"
+	exit 1
+}
+
+[ $# -ne 2 ] && echousage
+[ ! "$1" = "add" ] && [ ! "$1" = "rm" ] && echousage
+[ ! -f "$2" ] && echousage
+
+absname="$(realpath $2)"
+CACHE="$HOME/.cache/shadowcopy/cache"
+
+echo $1 $absname >> $CACHE

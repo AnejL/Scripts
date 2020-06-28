@@ -1,0 +1,11 @@
+#!/bin/sh
+filedir=$(echo $1 | sed -e 's/\///g')
+BACKUPDIR="$HOME/.cache/shadowcopy/backup"
+fulldir="$BACKUPDIR/$filedir"
+[ ! -d "$fulldir" ] && mkdir $fulldir
+
+number=$(ls $fulldir -t | head -n 1)
+
+[ $(ls $fulldir | wc -l) -gt 5 ] && rm "$fulldir/$(ls $fulldir -t | tail -n 1)"
+
+cp "$1" "$fulldir/$((number+1))"
