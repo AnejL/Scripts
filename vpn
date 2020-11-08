@@ -1,0 +1,20 @@
+#!/bin/sh
+# Location of the vpn server is passed as the first argument
+# Script then starts openvpn client service for that specific location
+
+LOCATION=""
+[ $# -eq 0 ] && LOCATION="home" || LOCATION=$1
+
+if [ "$1" = "stop" ]
+then
+	sudo systemctl stop openvpn-client@client*.service 
+	echo "Stopped openvpn service successfully!"
+	exit 0
+fi
+
+sudo systemctl start openvpn-client@client_$LOCATION.service
+
+sudo systemctl status openvpn-client@client_$LOCATION.service | tee /dev/null
+
+echo -e "\nWait until service is started!\n"
+sleep 10 && errormessage "$(curl ifconfig.co)"

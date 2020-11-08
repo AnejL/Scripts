@@ -1,0 +1,11 @@
+#!/bin/sh
+USER_UID=$(id -u)
+USER_GID=$(id -g)
+xhost +local:docker
+
+# docker run --rm -ti  --volume=/etc/localtime:/etc/localtime --env=TERM --env=USER_UID=$USER_UID  \
+# 	--env=USER_GID=$USER_GID --env=TZ=Europe/Ljubljana -v /tmp/.X11-unix:/tmp/.X11-unix --env=DISPLAY -v $HOME/Downloads:/home/chrome/Downloads \
+# 	-v $HOME/.config/google-chrome/:/data --security-opt=seccomp:/opt/seccomp/chrome.json --device=/dev/snd --device=/dev/dri --group-add=video \
+# 	--volume=/dev/shm:/dev/shm chromium
+
+sudo -g docker docker run -ti --net host --rm --volume=/etc/localtime:/etc/localtime:ro --env=TERM --env=USER_UID=$USER_UID --env=USER_UID=$USER_UID --env=TZ=Europe/Ljubljana --volume=/home/matej/env:/pwd --env=DISPLAY --volume=/tmp/.X11-unix:/tmp/X11-unix:ro --device=/dev/dri --group-add=video --shm-size=2g --security-opt=seccomp:/opt/seccomp/chrome.json chromium chromium --no-sandbox 

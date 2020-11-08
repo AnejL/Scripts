@@ -1,0 +1,12 @@
+#!/bin/bash
+
+MESSAGE="$@"
+[ $# -eq 0 ] && MESSAGE="ERROR!"
+
+LEN=$((${#MESSAGE} + 4))
+
+echo $(tput setaf 3)
+printf "%0.s-" $(seq 1 $LEN)
+printf "\n| $MESSAGE |\n"
+printf "%0.s-" $(seq 1 $LEN)
+echo -e "$(tput sgr0)\n"
