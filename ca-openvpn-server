@@ -1,0 +1,28 @@
+#!/bin/sh
+[ $(id -u) -ne 0 ] && errormessage "Run as root" && exit 1
+
+read -p "Enter openvpn server keypair name (required): " servername
+read -p "Secure server key pair with password? (y/n): " servpass
+
+SERVERDIR=/tmp/ovpnserver-$servername
+mkdir $SERVERDIR
+
+cd /etc/easy-rsa
+
+# ca.crt -> /etc/openvpn/server/ca.crt
+cp /etc/easy-rsa/pki/ca.crt $SERVERDIR
+
+[ ! "$servpass" = "y" ] && easyrsa gen-req $servername nopass || easyrsa gen-req $servername
+
+# servername.key -> /etc/openvpn/server/servername.key
+cp /etc/easy-rsa/pki/private/$servername.key $SERVERDIR
+
+# ta.key -> /etc/openvpn/server/ta.key
+TLSAUTHKEY=/etc/easy-rsa/ta.key
+[ ! -f $TLSAUTHKEY ] && openvpn --genkey --secret $TLSAUTHKEY
+cp $TLSAUTHKEY $SERVERDIR
+
+easyrsa sign-req server $servername
+
+# servername.crt -> /etc/openvpn/server/servername.crt
+cp /etc/easy-rsa/pki/issued/$servername.crt $SERVERDIR

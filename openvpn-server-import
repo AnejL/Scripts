@@ -1,0 +1,14 @@
+#!/bin/sh
+[ $(id -u) -ne 0 ] && errormessage "Run as root" && exit 1
+
+pacman -S easy-rsa openvpn
+
+# todo improve dir structure
+SERVERDIR=/tmp/$(ls /tmp/ | grep ovpnserver | fzf)
+
+
+# certificate
+cp $SERVERDIR/* /etc/openvpn/server
+chown root:root /etc/openvpn/server/*.crt
+
+echo "Finished copying certificates from $SERVERDIR"

@@ -1,0 +1,29 @@
+#!/bin/sh
+[ "$1" = "--help" ] && echo "help message" && exit 1
+[ $(id -u) -ne 0 ] && errormessage "Run as root" && exit 1
+
+read -p "Enter openvpn client keypair name (required): " clientname
+read -p "Secure client key pair with password? (y/n): " clientpass
+
+CLIENTDIR=/tmp/ovpnclient-$clientname
+mkdir $CLIENTDIR
+
+cd /etc/easy-rsa
+
+# ca.crt -> /etc/openvpn/client/ca.crt
+cp /etc/easy-rsa/pki/ca.crt $CLIENTDIR
+
+[ ! "$clientpass" = "y" ] && easyrsa gen-req $clientname nopass || easyrsa gen-req $clientname
+
+# clientname.key -> /etc/openvpn/client/clientname.key
+cp /etc/easy-rsa/pki/private/$clientname.key $CLIENTDIR
+
+# ta.key -> /etc/openvpn/client/ta.key
+TLSAUTHKEY=/etc/easy-rsa/ta.key
+[ ! -f $TLSAUTHKEY ] && errormessage "Server not initialised! TLS auth key not found!" && exit 1
+cp $TLSAUTHKEY $CLIENTDIR
+
+easyrsa sign-req client $clientname
+
+# clientname.crt -> /etc/openvpn/client/clientname.crt
+cp /etc/easy-rsa/pki/issued/$clientname.crt $CLIENTDIR
