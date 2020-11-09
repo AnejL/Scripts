@@ -9,6 +9,6 @@ SERVERDIR=/tmp/$(ls /tmp/ | grep ovpnserver | fzf)
 
 # certificate
 cp $SERVERDIR/* /etc/openvpn/server
-chown root:root /etc/openvpn/server/*.crt
+chown root:root /etc/openvpn/server/*
 
 echo "Finished copying certificates from $SERVERDIR"
