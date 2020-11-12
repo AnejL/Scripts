@@ -7,14 +7,16 @@ LOCATION=""
 
 if [ "$1" = "stop" ]
 then
-	sudo systemctl stop openvpn-client@client*.service 
+	sudo systemctl stop openvpn-client@*.service 
 	echo "Stopped openvpn service successfully!"
 	exit 0
 fi
 
-sudo systemctl start openvpn-client@client_$LOCATION.service
+#echo $LOCATION
+#exit 1
+sudo systemctl start openvpn-client@$LOCATION.service
 
-sudo systemctl status openvpn-client@client_$LOCATION.service | tee /dev/null
+sudo systemctl status openvpn-client@$LOCATION.service | tee /dev/null
 
 echo -e "\nWait until service is started!\n"
 sleep 10 && errormessage "$(curl ifconfig.co)"
