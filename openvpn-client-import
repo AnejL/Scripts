@@ -16,11 +16,11 @@ cp $CACHEDIR/*/*.crt /etc/easy-rsa/pki/signed
 read -p "This is going tor reset the folder with server name in /etc/openvpn/client. Proceed? (y/n) " reset
 [ ! "$reset" = "y" ] && exit 1
 
-#mkdir -p /etc/openvpn/client
-cp $CACHEDIR/* /etc/openvpn/client
+cp -r $CACHEDIR/* /etc/openvpn/client
 
 # change permissions of all folder contents of all folders in /etc/openvpn/client
 chmod 0400 /etc/openvpn/client/*/*
+chown openvpn:network /etc/openvpn/client/*
 chown openvpn:network /etc/openvpn/client/*/*
 
 echo "Finished copying certificates from $CLIENTDIR"
