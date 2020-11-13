@@ -4,8 +4,8 @@
 read -p "Enter openvpn server keypair name (required): " servername
 read -p "Secure server key pair with password? (y/n): " servpass
 
-SERVERDIR=/tmp/ovpnserver-$servername
-mkdir $SERVERDIR
+SERVERDIR=/tmp/ovpnserver-$servername/$servername
+mkdir -p $SERVERDIR
 
 cd /etc/easy-rsa
 
@@ -28,4 +28,4 @@ easyrsa sign-req server $servername
 cp /etc/easy-rsa/pki/issued/$servername.crt $SERVERDIR
 
 cd /tmp
-zip -r ovpnserver-$servername.zip ovpnserver-$servername
+zip -r ovpnserver-$servername.zip ovpnserver-$servername/*
