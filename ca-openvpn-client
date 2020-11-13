@@ -28,5 +28,5 @@ easyrsa sign-req client $clientname
 # clientname.crt -> /etc/openvpn/client/clientname.crt
 cp /etc/easy-rsa/pki/issued/$clientname.crt $CLIENTDIR
 
-cd /tmp/ovpnserver-$clientname
+cd /tmp/ovpnclient-$clientname
 zip -r /tmp/ovpnclient-$clientname.zip .
