@@ -1,22 +1,27 @@
 #!/bin/sh
 [ $(id -u) -ne 0 ] && errormessage "Run as root" && exit 1
 
-pacman -S openvpn
+pacman -S openvpn unzip
+
+CACHEDIR=/tmp/importcache
 
 CLIENTDIR=/tmp/$(ls /tmp/ | grep ovpnclient | fzf)
 
+unzip $CLIENTDIR -d $CACHEDIR
+
 # copy certificate into signed directory
 [ ! -d /etc/easy-rsa/pki/signed ] && mkdir -p /etc/easy-rsa/pki/signed
-cp $CLIENTDIR/*/*.crt /etc/easy-rsa/pki/signed
+cp $CACHEDIR/*/*.crt /etc/easy-rsa/pki/signed
 
 read -p "This is going tor reset the folder with server name in /etc/openvpn/client. Proceed? (y/n) " reset
 [ ! "$reset" = "y" ] && exit 1
 
 #mkdir -p /etc/openvpn/client
-cp $CLIENTDIR/* /etc/openvpn/client
+cp $CACHEDIR/* /etc/openvpn/client
 
 # change permissions of all folder contents of all folders in /etc/openvpn/client
 chmod 0400 /etc/openvpn/client/*/*
 chown openvpn:network /etc/openvpn/client/*/*
 
 echo "Finished copying certificates from $CLIENTDIR"
+rm -rf $CACHEDIR

@@ -26,3 +26,6 @@ easyrsa sign-req server $servername
 
 # servername.crt -> /etc/openvpn/server/servername.crt
 cp /etc/easy-rsa/pki/issued/$servername.crt $SERVERDIR
+
+cd /tmp
+zip -r ovpnserver-$servername.zip ovpnserver-$servername
