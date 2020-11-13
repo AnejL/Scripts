@@ -7,17 +7,16 @@ CLIENTDIR=/tmp/$(ls /tmp/ | grep ovpnclient | fzf)
 
 # copy certificate into signed directory
 [ ! -d /etc/easy-rsa/pki/signed ] && mkdir -p /etc/easy-rsa/pki/signed
-cp $CLIENTDIR/*.crt /etc/easy-rsa/pki/signed
+cp $CLIENTDIR/*/*.crt /etc/easy-rsa/pki/signed
 
-read -p "Please provide the name of the vpn server: " server
-
-read -p "This is going tor reset folder /etc/openvpn/client/$server/. Proceed? (y/n) " reset
+read -p "This is going tor reset the folder with server name in /etc/openvpn/client. Proceed? (y/n) " reset
 [ ! "$reset" = "y" ] && exit 1
 
-mkdir -p /etc/openvpn/client/$server
-cp $CLIENTDIR/* /etc/openvpn/client/$server/
+#mkdir -p /etc/openvpn/client
+cp $CLIENTDIR/* /etc/openvpn/client
 
-chmod 0400 /etc/openvpn/client/$server/*
-chown root:root /etc/openvpn/client/$server/*
+# change permissions of all folder contents of all folders in /etc/openvpn/client
+chmod 0400 /etc/openvpn/client/*/*
+chown openvpn:network /etc/openvpn/client/*/*
 
 echo "Finished copying certificates from $CLIENTDIR"

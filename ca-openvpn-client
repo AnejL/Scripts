@@ -5,8 +5,8 @@
 read -p "Enter openvpn client keypair name (required): " clientname
 read -p "Secure client key pair with password? (y/n): " clientpass
 
-CLIENTDIR=/tmp/ovpnclient-$clientname
-mkdir $CLIENTDIR
+CLIENTDIR=/tmp/ovpnclient-$clientname/$clientname
+mkdir -p $CLIENTDIR
 
 cd /etc/easy-rsa
 
