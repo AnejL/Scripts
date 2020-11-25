@@ -1,0 +1,19 @@
+#!/bin/sh
+#
+# used for initialization of new repositories while not overriding old ones
+#
+[ "$1" = "--help" ] && echo "gip [dest] [remote]" && exit 1
+
+DEST=$1
+
+[ ! -d $DEST ] && mkdir -p $DEST
+
+cd $DEST
+
+if [ ! -d .git ]
+then
+	git init
+	git remote add origin $2
+fi
+
+git pull origin master
