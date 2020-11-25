@@ -7,7 +7,7 @@ zip -r /tmp/ssh.zip /home/anej/.ssh
 echo "archiving openvpn directory"
 zip -r /tmp/ovpn.zip /etc/openvpn
 
-scp /tmp/ssh.zip vpnuk:/home/anej/ssh.zip
-scp /tmp/ovpn.zip vpnuk:/home/anej/ovpn.zip
+scp /tmp/ssh.zip vpnen:/home/anej/ssh.zip
+scp /tmp/ovpn.zip vpnen:/home/anej/ovpn.zip
 
 echo "All done!"
