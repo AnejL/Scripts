@@ -1,0 +1,13 @@
+#!/bin/sh
+[ $(id -u) -ne 0 ] && errormessage "Run as root" && exit 1
+
+echo "archiving ssh directory"
+zip -r /tmp/ssh.zip /home/anej/.ssh
+
+echo "archiving openvpn directory"
+zip -r /tmp/ovpn.zip /etc/openvpn
+
+scp /tmp/ssh.zip vpnuk:/home/anej/ssh.zip
+scp /tmp/ovpn.zip vpnuk:/home/anej/ovpn.zip
+
+echo "All done!"
