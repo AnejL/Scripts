@@ -1,7 +1,9 @@
 #!/bin/bash
 
-inputdir="$HOME/Documents/Faks/diplomska/design/svg"
-outputdir="$HOME/Documents/Faks/diplomska/design/png"
+# inputdir="$HOME/Documents/Faks/diplomska/design/svg"
+# outputdir="$HOME/Documents/Faks/diplomska/design/png"
+inputdir="$HOME/Devel/pyhton/cl-icon-importer/assets"
+outputdir="$HOME/Devel/pyhton/cl-icon-importer/pdf"
 
 files=$(ls $inputdir)
 for file in $files
@@ -10,7 +12,7 @@ do
 	[[ $file =~ ^_ ]] && continue
 
 	# remove .svg from filename and append .png
-	pngname="${file%.svg}.png"
+	pngname="${file%.svg}.pdf"
 
 	# export as png
 	inkscape "$inputdir/$file" --export-filename "$outputdir/$pngname"

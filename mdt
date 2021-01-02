@@ -1,0 +1,8 @@
+#!/bin/bash
+[ "$1" = "--help" ] && echo "usage: mdt DBNAME" && exit 1
+read -s -p "Password: " pass
+
+mysql -u root -p$pass -Nse 'show tables' $1 | while read table; do mysql -u root -p$pass -e "SET FOREIGN_KEY_CHECKS = 0; truncate table $table" $1; done
+
+echo "Done!"
+unset pass
