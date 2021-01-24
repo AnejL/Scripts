@@ -14,20 +14,37 @@ function shout () {
 	error "$@"
 }
 
-CONFIG="$HOME/.config/birthdayserver"
+function send () {
+	METHOD=$1
+	URL=$2
+	[ ! -z "$3" ] && DATA="{$3}" || DATA=""
+	BEARERHEADERS="Authorization: Bearer ${TOKEN}"
+	DATAHEADERS='Content-Type: application/json; charset=utf-8'
+	
+	curl -sX "$METHOD" -k \
+		-H "Authorization: Bearer ${TOKEN}" \
+		-H "Content-Type: application/json; charset=utf-8" \
+		--data "$DATA" "$URL"
+}
 
-if [ ! -f $CONFIG ]; then
-	shout "SPECIFY BIRTHDAY SERVER ADDRESS\n$CONFIG"
-fi
+CONFIGFILE="$HOME/.config/birthdayserver"
+TOKENFILE="$HOME/.config/birthdaytoken"
 
-URL="$(cat $CONFIG)"
+[ ! -f $CONFIGFILE ] && shout "SPECIFY BIRTHDAY SERVER ADDRESS\n$CONFIGFILE"
+[ ! -f $TOKENFILE ] && shout "AUTHORIZATION TOKEN REQUIRED\n$TOKENFILE"
+
+URL="$(cat $CONFIGFILE)"
+TOKEN="$(cat $TOKENFILE)"
 
 [ "$(isonline $URL)" = "offline" ] && shout "Birthday server unreachable!" 
 
-[ "$1" = "today" ] && curl -sX GET -k $URL/birthdays/today | jq --raw-output 'map(.person) | .[]' && exit 0
+# bdcli today
+[ "$1" = "today" ] && send GET "$URL/birthdays/today" | jq --raw-output 'map(.person) | .[]' && exit 0
 
-[ $# -eq 2 ] && curl -sX GET -k $URL/birthdays/date/$2/$1 | jq --raw-output 'map(.person) | .[]' && exit 0
+# bdcli 26 5
+[ $# -eq 2 ] && send GET "$URL/birthdays/date/$2/$1" | jq --raw-output 'map(.person) | .[]' && exit 0
 
+# bdcli insert
 if [ "$1" = "insert" ]; then
 	echo "Insert a birthday"
 	read -p 'Name: ' name
@@ -35,24 +52,32 @@ if [ "$1" = "insert" ]; then
 	read -p 'Month: ' month
 	DATA=\"Day\":\"$day\",\"Month\":\"$month\",\"Person\":\"$name\"
 
-	curl --header "Content-Type: application/json; charset=utf-8" \
-		--data "{$DATA}" \
-		-sX POST -k $URL/birthdays/insert | jq --raw-output
+	send POST "$URL/birthdays/insert" "$DATA" | jq --raw-output
 	exit 0
 fi
 
+# bdcli 5
 if [[ $1 =~ ^(0?[1-9]|1[012])$ ]]; then
-	curl -sX GET -k $URL/birthdays/month/$1 | jq --raw-output 'map(.person) | .[]'
+	send GET "$URL/birthdays/month/$1" | jq --raw-output 'map(.person) | .[]'
 	exit 0
 fi
 
+# bdcli delete
 if [ "$1" = "delete" ]; then
 	echo "Delete a birthday"
 	read -p 'Name: ' name
 	DATA=\"Person\":\"$name\"
 
-	curl --header "Content-Type: application/json; charset=utf-8" \
-		--data "{$DATA}" \
-		-sX DELETE -k $URL/birthdays/delete | jq --raw-output
+	send DELETE "$URL/birthdays/delete" "$DATA" | jq --raw-output 
+	exit 0
+fi
+
+# bdcli person
+if [ "$1" = "person" ]; then
+	echo "Find someone's birthday"
+	read -p 'Name: ' name
+	echo $name
+
+	send GET "$URL/birthdays/$name" | jq --raw-output '.day,.month' 2>/dev/null | tr "\n" " " && echo 
 	exit 0
 fi
