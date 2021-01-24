@@ -1,0 +1,58 @@
+#!/bin/bash
+
+function error () {
+	1>&2 echo -e "$@"
+	exit 1
+}
+
+function notification () {
+	notify-send "$@"
+}
+
+function shout () {
+	notification "$@"
+	error "$@"
+}
+
+CONFIG="$HOME/.config/birthdayserver"
+
+if [ ! -f $CONFIG ]; then
+	shout "SPECIFY BIRTHDAY SERVER ADDRESS\n$CONFIG"
+fi
+
+URL="$(cat $CONFIG)"
+
+[ "$(isonline $URL)" = "offline" ] && shout "Birthday server unreachable!" 
+
+[ "$1" = "today" ] && curl -sX GET -k $URL/birthdays/today | jq --raw-output 'map(.person) | .[]' && exit 0
+
+[ $# -eq 2 ] && curl -sX GET -k $URL/birthdays/date/$2/$1 | jq --raw-output 'map(.person) | .[]' && exit 0
+
+if [ "$1" = "insert" ]; then
+	echo "Insert a birthday"
+	read -p 'Name: ' name
+	read -p 'Day: ' day
+	read -p 'Month: ' month
+	DATA=\"Day\":\"$day\",\"Month\":\"$month\",\"Person\":\"$name\"
+
+	curl --header "Content-Type: application/json; charset=utf-8" \
+		--data "{$DATA}" \
+		-sX POST -k $URL/birthdays/insert | jq --raw-output
+	exit 0
+fi
+
+if [[ $1 =~ ^(0?[1-9]|1[012])$ ]]; then
+	curl -sX GET -k $URL/birthdays/month/$1 | jq --raw-output 'map(.person) | .[]'
+	exit 0
+fi
+
+if [ "$1" = "delete" ]; then
+	echo "Delete a birthday"
+	read -p 'Name: ' name
+	DATA=\"Person\":\"$name\"
+
+	curl --header "Content-Type: application/json; charset=utf-8" \
+		--data "{$DATA}" \
+		-sX DELETE -k $URL/birthdays/delete | jq --raw-output
+	exit 0
+fi

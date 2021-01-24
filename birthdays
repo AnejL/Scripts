@@ -1,0 +1,21 @@
+#!/bin/bash
+
+function todmenu {
+	[ -z "$1" ] && echo "No birthdays today" && exit 1 
+
+	# quotes necessary to perserve newlines
+	count=$(echo "$1" | wc -l)
+	if [ $count -gt 0 ]; then
+		echo "$1" | dmenu -p "$2" -l $count $DMENU_CENTER_TOP -y 0 -fn "IBM Plex Mono:style=Regular:size=15" > /dev/null
+	fi
+}
+
+# until the 5th of month see all the birthdays this month
+if [ $(date +"%d") -lt 6 ]; then
+	THISMONTH=$(bdcli $(date +"%m"))	
+	todmenu "$THISMONTH" "Birthdays this month: "
+fi
+
+# get today's birthdays
+TODAY=$(bdcli today)
+todmenu "$TODAY" "Birthdays today: "
