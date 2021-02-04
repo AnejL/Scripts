@@ -24,6 +24,8 @@ function send () {
 	curl -sX "$METHOD" -k \
 		-H "Authorization: Bearer ${TOKEN}" \
 		-H "Content-Type: application/json; charset=utf-8" \
+		--connect-timeout 2 \
+		--max-time 5 \
 		--data "$DATA" "$URL"
 }
 
@@ -66,9 +68,8 @@ fi
 if [ "$1" = "delete" ]; then
 	echo "Delete a birthday"
 	read -p 'Name: ' name
-	DATA=\"Person\":\"$name\"
-
-	send DELETE "$URL/birthdays/delete" "$DATA" | jq --raw-output 
+	
+	send DELETE "$URL/birthdays/delete/$name" | jq --raw-output 
 	exit 0
 fi
 
