@@ -1,2 +1,6 @@
 #!/bin/sh
-cat $1 | sed 's/public const string /<x:String x:Key="/g' | sed -e 's/ = "\\u/">\&\#x/g' | sed 's/";/;<\/x:String>/g'
+#
+# usage: cs2xaml [filename]
+# 
+
+cat $1 | grep 'public const string' | sed 's/\tpublic const string /<x:String x:Key="/g' | sed -e 's/ = "\\u/">\&\#x/g' | sed 's/";/;<\/x:String>/g'
