@@ -1,0 +1,5 @@
+#!/bin/sh
+
+OUT="HDMI2"
+
+xrandr --output LVDS1 --auto --primary --output "$OUT" --off
