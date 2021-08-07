@@ -73,9 +73,22 @@ if [ ! -d "/tmp/mt" ]; then
 	touch /tmp/mt/last
 fi
 
-sudo mount "/dev/sd$1" "$dir"
+#list all disks and partitions
+devices=$(lsblk -l -o NAME | tail -n+2)
+
+#get selected partition name
+target=$(echo -e $devices | tr " " "\n" | grep $1)
+
+if [ ! $(echo $target | wc -l) -eq 1 ]; then
+	tput setaf 1
+	echo "Partition or device not found"
+	tput setaf sgr0
+	exit 1
+fi
+
+sudo mount "/dev/$target" "$dir"
 echo "$dir" > /tmp/mt/last
-echo "Mounted /dev/sd$1 to $dir successfully!"
+echo "Mounted /dev/$target to $dir successfully!"
 
 ranger $dir
 
