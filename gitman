@@ -44,6 +44,6 @@ for repo in $(cat $CONFIGFILE); do
 			read -p "Remote repo behind local. Push? [y/n] "
 			[ "$REPLY" = "n" ] && continue
 		fi
-		gc "gitman update"
+		gitc "gitman update"
 	fi
 done 
